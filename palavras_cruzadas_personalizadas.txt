@@ -1,0 +1,20 @@
+Nível: facil
+Pistas: Pista 1: Esta é uma fruta vermelha, Pista 2: Animal que mia
+Respostas: morango, gato
+Dicas: Dica 1: É uma fruta doce, Dica 2: Tem muitas sementes
+
+Nível: medio
+Pistas: Pista 1: É um planeta do nosso sistema solar, Pista 2: Instrumento musical de corda
+Respostas: terra, violino
+Dicas: Dica 1: É o terceiro planeta a partir do sol, Dica 2: Tem uma lua chamada Lua
+
+Nível: dificil
+Pistas: Pista 1: Este é um elemento químico, Pista 2: É um animal aquático
+Respostas: hidrogenio, tubarao
+Dicas: Dica 1: É o elemento mais abundante no universo, Dica 2: É um gás incolor e inflamável
+
+Nível: expert
+Pistas: Pista 1: Cientista famoso pela teoria da relatividade
+Respostas: einstein
+Dicas: Dica 1: Autor da fórmula E=mc^2
+
