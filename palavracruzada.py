@@ -1,33 +1,10 @@
 import random
 import time
-
-# Banco de dados de palavras cruzadas com níveis de dificuldade
-palavras_cruzadas = {
-    'facil': {
-        'pistas': ["Pista 1: Esta é uma fruta vermelha", "Pista 2: Animal que mia"],
-        'respostas': ["morango", "gato"],
-        'dicas': ["Dica 1: É uma fruta doce", "Dica 2: Tem muitas sementes"]
-    },
-    'medio': {
-        'pistas': ["Pista 1: É um planeta do nosso sistema solar", "Pista 2: Instrumento musical de corda"],
-        'respostas': ["terra", "violino"],
-        'dicas': ["Dica 1: É o terceiro planeta a partir do sol", "Dica 2: Tem uma lua chamada Lua"]
-    },
-    'dificil': {
-        'pistas': ["Pista 1: Este é um elemento químico", "Pista 2: É um animal aquático"],
-        'respostas': ["hidrogenio", "tubarao"],
-        'dicas': ["Dica 1: É o elemento mais abundante no universo", "Dica 2: É um gás incolor e inflamável"]
-    },
-    'expert': {
-        'pistas': ["Pista 1: Cientista famoso pela teoria da relatividade"],
-        'respostas': ["einstein"],
-        'dicas': ["Dica 1: Autor da fórmula E=mc^2"]
-    }
-}
+from crosswords import palavras_cruzadas as palavras_cruzadas
 
 def escolher_palavras_cruzadas():
     nivel = input("Escolha o nível de dificuldade (facil/medio/dificil/expert): ").lower()
-    return palavras_cruzadas.get(nivel, palavras_cruzadas['facil'])
+    return random.choice(palavras_cruzadas.get(nivel, palavras_cruzadas.get('facil', {})))
 
 def mostrar_dicas(dicas):
     for dica in dicas:
@@ -43,7 +20,7 @@ def jogar_palavras_cruzadas(tempo_limite=None):
     print("\nBem-vindo ao jogo de palavras cruzadas!")
     print("Responda às pistas com as palavras corretas para ganhar pontos.")
     
-    for indice, pista in enumerate(palavras['pistas']):
+    for indice, pista in enumerate(palavras.get('pistas', [])):
         print("\n" + pista)
         resposta_jogador = input("Sua resposta: ").lower()
         
@@ -52,7 +29,7 @@ def jogar_palavras_cruzadas(tempo_limite=None):
             pontuacao += 1
         else:
             print("Incorreto!")
-            if dicas_utilizadas < len(palavras['dicas']):
+            if dicas_utilizadas < len(palavras.get('dicas', [])):
                 mostrar_dicas(palavras['dicas'][dicas_utilizadas:])
                 dicas_utilizadas = len(palavras['dicas'])
             else:
@@ -64,7 +41,7 @@ def jogar_palavras_cruzadas(tempo_limite=None):
             break
     
     tempo_total = time.time() - tempo_inicial
-    print("\nPontuação final:", pontuacao, "/", len(palavras['pistas']))
+    print("\nPontuação final:", pontuacao, "/", len(palavras.get('pistas', [])))
     print("Tempo total:", round(tempo_total, 2), "segundos")
 
 def modo_multiplayer():
@@ -79,10 +56,10 @@ def modo_estudo():
     
     print("\nModo de estudo selecionado.")
     print("Pistas e respostas:")
-    for indice, pista in enumerate(palavras['pistas']):
+    for indice, pista in enumerate(palavras.get('pistas', [])):
         print(f"\nPista {indice + 1}: {pista}")
         print(f"Resposta: {palavras['respostas'][indice]}")
-        if indice < len(palavras['dicas']):
+        if indice < len(palavras.get('dicas', [])):
             print("Dicas:")
             for dica in palavras['dicas'][indice:]:
                 print(dica)
@@ -111,30 +88,15 @@ def criar_palavras_cruzadas_personalizadas():
     print(f"\nPalavras cruzadas personalizadas para o nível '{nivel}' criadas com sucesso!")
 
 def salvar_palavras_cruzadas():
-    with open("palavras_cruzadas_personalizadas.txt", "w") as arquivo:
-        for nivel, dados in palavras_cruzadas.items():
-            arquivo.write(f"Nível: {nivel}\n")
-            arquivo.write(f"Pistas: {', '.join(dados['pistas'])}\n")
-            arquivo.write(f"Respostas: {', '.join(dados['respostas'])}\n")
-            arquivo.write(f"Dicas: {', '.join(dados['dicas'])}\n\n")
+    with open("palavras_cruzadas_personalizadas.json", "w") as arquivo:
+        json.dump(palavras_cruzadas, arquivo, indent=4)
     print("Palavras cruzadas personalizadas salvas com sucesso!")
 
 def carregar_palavras_cruzadas():
     try:
-        with open("palavras_cruzadas_personalizadas.txt", "r") as arquivo:
-            linhas = arquivo.readlines()
+        with open("palavras_cruzadas_personalizadas.json", "r") as arquivo:
             palavras_cruzadas.clear()  # Limpa o banco de dados existente
-            nivel = None
-            for linha in linhas:
-                if linha.startswith("Nível:"):
-                    nivel = linha.split(":")[1].strip().lower()
-                elif linha.startswith("Pistas:"):
-                    pistas = linha.split(":")[1].strip().split(", ")
-                elif linha.startswith("Respostas:"):
-                    respostas = linha.split(":")[1].strip().split(", ")
-                elif linha.startswith("Dicas:"):
-                    dicas = linha.split(":")[1].strip().split(", ")
-                    palavras_cruzadas[nivel] = {'pistas': pistas, 'respostas': respostas, 'dicas': dicas}
+            palavras_cruzadas.update(json.load(arquivo))
         print("Palavras cruzadas personalizadas carregadas com sucesso!")
     except FileNotFoundError:
         print("Nenhum arquivo de palavras cruzadas personalizadas encontrado.")
